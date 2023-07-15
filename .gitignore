@@ -1,2 +1,4 @@
 /node_modules
-/request.rest
+/server.rest
+/note.txt
+/.env
