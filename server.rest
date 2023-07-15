@@ -1,0 +1,32 @@
+GET  HTTP://localhost:3000/order
+
+###
+GET  HTTP://localhost:3000/order/rQvmueANEz2dvbmxFtzu
+
+###
+POST  HTTP://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "aldo@gmail.com",
+    "password": "surabaya"
+}
+
+
+###
+DELETE HTTP://localhost:3000/product/db860c2a-7d8c-4720-97ec-c1f445887a27
+
+
+###
+PATCH HTTP://localhost:3000/product/d78231f2-0daf-4332-98c6-060307adef81
+Content-Type: application/json
+
+{
+  "username": "qowiyruf",
+  "umur": 22,
+  "nama": "Muhammad qowiy",
+  "alamat": "Jalan jakarta",
+  "nomor": "081294111541",
+  "password": "jakarta",
+  "confirmPassword": "jakarta"
+}

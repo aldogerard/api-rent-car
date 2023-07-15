@@ -1,0 +1,35 @@
+try {
+    const q = where("role", "==", "customer");
+    const datas = await getDocs(query(collect, q));
+
+    const response = datas.docs.map((doc) => {
+      const { username, email, role, password } = doc.data();
+      if (email == "aldo@gmail.com") {
+        if (password == "surabaya") {
+          return {
+            id: doc.id,
+            username,
+            email,
+            role,
+          };
+        }
+      }
+    });
+
+    if (response[0] === null) return failedReq(res, 500, "data tidak valid");
+    successReq(res, 200, "Success", response);
+  } catch (err) {
+    failedReq(res, 500, err.message);
+  }
+
+  // const compare = bcrypt.compareSync(password, passwordHash);
+
+
+Pemesanan
+1.  id_mobil  
+2.  id_user
+3.  tanggal mulai pemesanan
+4.  tanggal selesai pemesanan
+5.  harga
+6.  total harga
+7.  status
