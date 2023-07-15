@@ -112,7 +112,7 @@ export const updateProduct = async (req, res) => {
     const filePath = `./public/images/${product.data().images}`;
     fs.unlinkSync(filePath);
 
-    file.mv(`./public/images/${fileName}`, (err) => {
+    file.mv(`/public/images/${fileName}`, (err) => {
       if (err) return failedReq(res, 502, err.message);
     });
   }
