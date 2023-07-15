@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import session from "express-session";
 
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
@@ -19,16 +18,6 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.json({ message: "RENT CAR SERVICE" });
 });
-app.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: "auto",
-    },
-  })
-);
 
 app.use(userRoute);
 app.use(productRoute);
