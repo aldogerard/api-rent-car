@@ -68,7 +68,7 @@ export const getUserById = async (req, res) => {
 
 export const createUser = async (req, res) => {
   try {
-    const { email, password, confirmPassword, username, nama, alamat, umur, nomor } = req.body;
+    const { email, password, confirmPassword, nama, alamat, umur, nomor } = req.body;
 
     if (!validator.isEmail(email)) return failedReq(res, 400, "Email is not valid");
 
@@ -88,7 +88,6 @@ export const createUser = async (req, res) => {
     const passwordHash = bcrypt.hashSync(password, saltRounds);
 
     await setDoc(doc(db, "users", v4()), {
-      username,
       email,
       passwordHash,
       nama,

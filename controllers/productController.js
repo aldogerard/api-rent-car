@@ -46,6 +46,7 @@ export const createProduct = async (req, res) => {
   if (req.files == null) return failedReq(res, 400, "No file uploaded");
   const { name, price, brand, year, type } = req.body;
   const file = req.files.file;
+  console.log(file);
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
   const fileName = bcrypt.hashSync(file.name, 2).split(".").join("").replace(/\//g, "") + ext;
