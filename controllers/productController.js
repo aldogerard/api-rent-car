@@ -84,7 +84,7 @@ export const deleteProduct = async (req, res) => {
   if (!product.data()) return failedReq(res, 400, "Product not found");
 
   try {
-    const filePath = `./public/images/${product.data().images}`;
+    const filePath = `/images/${product.data().images}`;
     fs.unlinkSync(filePath);
 
     const id = req.params.id;
