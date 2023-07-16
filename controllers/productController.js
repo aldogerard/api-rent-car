@@ -60,7 +60,7 @@ export const createProduct = async (req, res) => {
   if (!allowedType.includes(ext.toLowerCase())) return failedReq(res, 400, "Invalid image type");
   if (fileSize > 5000000) return failedReq(res, 400, "Image must be less than 5MB");
 
-  file.mv(`/public/images/${fileName}`, async (err) => {
+  file.mv(`/var/task/public/images/${fileName}`, async (err) => {
     if (err) return failedReq(res, 502, err.message);
     try {
       await setDoc(doc(db, "products", v4()), {
@@ -83,7 +83,7 @@ export const deleteProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
   if (!product.data()) return failedReq(res, 400, "Product not found");
   try {
-    const filePath = `/var/task/public/images/${product.data().images}`;
+    const filePath = `./public/images/${product.data().images}`;
     fs.unlinkSync(filePath);
 
     const id = req.params.id;
