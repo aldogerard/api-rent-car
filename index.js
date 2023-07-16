@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.json({ message: "RENT CAR SERVICE" });
+  res.json({ message: "RENT CAR SERVICE", __dirname });
 });
 
 app.use(userRoute);
