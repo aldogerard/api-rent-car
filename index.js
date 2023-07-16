@@ -15,10 +15,13 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log(__dirname);
+
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
-app.use(express.static(path.join(__dirname, "images")));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.json({ message: "RENT CAR SERVICE" });

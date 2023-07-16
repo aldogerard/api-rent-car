@@ -109,7 +109,7 @@ export const updateProduct = async (req, res) => {
     if (!allowedType.includes(ext.toLowerCase())) return failedReq(res, 400, "Invalid image type");
     if (fileSize > 5000000) return failedReq(res, 400, "Image must be less than 5MB");
 
-    const filePath = `./images/${product.data().images}`;
+    const filePath = `./public/images/${product.data().images}`;
     fs.unlinkSync(filePath);
 
     file.mv(`./images/${fileName}`, (err) => {
@@ -119,7 +119,7 @@ export const updateProduct = async (req, res) => {
 
   console.log("test");
   const { name, price, brand, year, type } = req.body;
-  const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+  const url = `${req.protocol}://${req.get("host")}/public/images/${fileName}`;
 
   try {
     await updateDoc(doc(db, "products", req.params.id), {
