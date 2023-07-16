@@ -82,7 +82,7 @@ export const createProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
   if (!product.data()) return failedReq(res, 400, "Product not found");
-
+  console.log(__dirname);
   try {
     const filePath = `/images/${product.data().images}`;
     fs.unlinkSync(filePath);
