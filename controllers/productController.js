@@ -3,6 +3,11 @@ import path from "path";
 import bcrypt from "bcrypt";
 import fs from "fs";
 
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import { collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../config/database.js";
 
@@ -46,18 +51,16 @@ export const createProduct = async (req, res) => {
   if (req.files == null) return failedReq(res, 400, "No file uploaded");
   const { name, price, brand, year, type } = req.body;
   const file = req.files.file;
-  console.log(file);
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
   const fileName = bcrypt.hashSync(file.name, 2).split(".").join("").replace(/\//g, "") + ext;
-  console.log(fileName);
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
   const allowedType = [".png", ".jpg", ".jpeg"];
 
   if (!allowedType.includes(ext.toLowerCase())) return failedReq(res, 400, "Invalid image type");
   if (fileSize > 5000000) return failedReq(res, 400, "Image must be less than 5MB");
 
-  file.mv(`./public/images/${fileName}`, async (err) => {
+  file.mv(`/public/images/${fileName}`, async (err) => {
     if (err) return failedReq(res, 502, err.message);
     try {
       await setDoc(doc(db, "products", v4()), {
