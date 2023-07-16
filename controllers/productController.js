@@ -119,7 +119,6 @@ export const updateProduct = async (req, res) => {
     });
   }
 
-  console.log("test");
   const { name, price, brand, year, type } = req.body;
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 

@@ -33,3 +33,14 @@ Pemesanan
 5.  harga
 6.  total harga
 7.  status
+
+product
+
+vercel
+- getProduct
+- getProductById
+
+local 
+- update
+- delete
+- post //gambar git
