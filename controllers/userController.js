@@ -15,7 +15,7 @@ export const getUser = async (req, res) => {
     const datas = await getDocs(query(collect, q));
 
     const response = datas.docs.map((doc) => {
-      const { username, email, role, nama, alamat, umur, nomor } = doc.data();
+      const { username, email, role, nama, alamat, nomor } = doc.data();
       return {
         id: doc.id,
         username,
@@ -23,7 +23,6 @@ export const getUser = async (req, res) => {
         role,
         nama,
         alamat,
-        umur,
         nomor,
       };
     });
@@ -44,7 +43,7 @@ export const getUserById = async (req, res) => {
     const response = datas.docs
       .filter((doc) => id == doc.id)
       .map((doc) => {
-        const { username, email, role, nama, alamat, umur, nomor } = doc.data();
+        const { username, email, role, nama, alamat, nomor } = doc.data();
         if (id === doc.id) {
           return {
             id: doc.id,
@@ -53,7 +52,6 @@ export const getUserById = async (req, res) => {
             role,
             nama,
             alamat,
-            umur,
             nomor,
           };
         }
@@ -68,7 +66,7 @@ export const getUserById = async (req, res) => {
 
 export const createUser = async (req, res) => {
   try {
-    const { email, password, confirmPassword, nama, alamat, umur, nomor } = req.body;
+    const { email, password, confirmPassword, nama, alamat, nomor } = req.body;
 
     if (!validator.isEmail(email)) return failedReq(res, 400, "Email is not valid");
 
@@ -93,7 +91,6 @@ export const createUser = async (req, res) => {
       nama,
       role: "customer",
       alamat,
-      umur,
       nomor,
     });
     successReq(res, 200, "Success create user", email);
@@ -120,7 +117,7 @@ export const updateUser = async (req, res) => {
   if (!user.data()) return failedReq(res, 400, "User not found");
 
   try {
-    const { username, nama, alamat, umur, nomor, password, confirmPassword } = req.body;
+    const { username, nama, alamat, nomor, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) return failedReq(res, 400, "Password not match");
 
@@ -131,7 +128,6 @@ export const updateUser = async (req, res) => {
       username,
       nama,
       alamat,
-      umur,
       nomor,
       passwordHash,
     });
