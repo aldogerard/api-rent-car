@@ -93,7 +93,7 @@ export const createUser = async (req, res) => {
       alamat,
       nomor,
     });
-    successReq(res, 200, "Success create user", email);
+    successReq(res, 200, "Success register", email);
   } catch (err) {
     failedReq(res, 500, err.message);
   }
