@@ -42,6 +42,34 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+export const checkOrder = async (req, res) => {
+  try {
+    const { idMobil, tanggalOrder } = req.body;
+
+    const q = (where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
+    const q2 = query(collect, where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
+    const checkMobil = await getDocs(q2);
+    const response = checkMobil.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+
+    if (response[0] != null) {
+      for (let tanggal of tanggalOrder) {
+        if (response[0].tanggalOrder.includes(tanggal)) {
+          return failedReq(res, 400, "order already exist");
+        }
+      }
+    }
+
+    successReq(res, 200, "No order found");
+  } catch (err) {
+    failedReq(res, 500, err.message);
+  }
+};
+
 export const createOrder = async (req, res) => {
   try {
     const { idUser, idMobil, tanggalOrder, hargaSewa, totalHarga } = req.body;
