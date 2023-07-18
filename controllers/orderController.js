@@ -44,10 +44,14 @@ export const getOrderById = async (req, res) => {
 
 export const checkOrder = async (req, res) => {
   try {
+    const { id } = req.params;
     const { idMobil, tanggalOrder } = req.body;
 
-    const q = (where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
-    const q2 = query(collect, where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
+    console.log(id);
+    console.log(tanggalOrder);
+
+    const q = (where("idMobil", "==", id), where("status", "!=", "selesai"));
+    const q2 = query(collect, where("idMobil", "==", id), where("status", "!=", "selesai"));
     const checkMobil = await getDocs(q2);
     const response = checkMobil.docs.map((doc) => {
       return {
@@ -55,6 +59,8 @@ export const checkOrder = async (req, res) => {
         ...doc.data(),
       };
     });
+
+    console.log(response[0]);
 
     if (response[0] != null) {
       for (let tanggal of tanggalOrder) {

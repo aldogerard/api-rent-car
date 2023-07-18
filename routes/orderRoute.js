@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/order", getOrder);
 router.get("/order/:id", getOrderById);
-router.get("/order/check/:id", checkOrder);
+router.post("/order/check/:id", checkOrder);
 router.post("/order", createOrder);
 router.patch("/order/payment/:id", paymentOrder);
 router.delete("/order/:id", deleteOrder);
