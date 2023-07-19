@@ -117,6 +117,14 @@ export const createOrder = async (req, res) => {
       }
     }
 
+    const datas = await getDoc(doc(db, "products", idMobil));
+    if (!datas.data()) return failedReq(res, 400, "Data not found");
+
+    const responseMobil = {
+      url: datas.data().url,
+      name: datas.data().name,
+    };
+
     await setDoc(doc(db, "orders", v4()), {
       idUser,
       idMobil,
@@ -127,6 +135,7 @@ export const createOrder = async (req, res) => {
       pesan: "Pembayaran belum selesai",
       uangPembayaran: "",
       uangKembali: "",
+      responseMobil,
     });
 
     successReq(res, 200, "Success order", { idUser, idMobil, tanggalOrder });
