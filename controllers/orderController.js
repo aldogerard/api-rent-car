@@ -42,6 +42,25 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+export const getOrderByIdUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const q = where("idUser", "==", id);
+    const datas = await getDocs(query(collect, q));
+    const response = datas.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+    if (response[0] == null) return failedReq(res, 400, "Data is empty", response);
+    successReq(res, 200, "Success", response);
+  } catch (err) {
+    failedReq(res, 500, err.message);
+  }
+};
+
 export const checkOrder = async (req, res) => {
   try {
     const { id } = req.params;
