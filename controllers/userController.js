@@ -116,23 +116,33 @@ export const updateUser = async (req, res) => {
   const user = await getDoc(doc(db, "users", req.params.id));
   if (!user.data()) return failedReq(res, 400, "User not found");
 
-  try {
-    const { username, nama, alamat, nomor, password, confirmPassword } = req.body;
+  bcrypt.compare(req.body.password, user.data().passwordHash, async (err, result) => {
+    if (err) return failedReq(res, 500, err.message);
 
-    if (password !== confirmPassword) return failedReq(res, 400, "Password not match");
+    if (!result) return failedReq(res, 400, "Password is not Valid");
 
-    const saltRounds = 10;
-    const passwordHash = bcrypt.hashSync(password, saltRounds);
+    try {
+      const { email, nama, alamat, nomor, newPassword, confirmPassword } = req.body;
 
-    await updateDoc(doc(db, "users", req.params.id), {
-      username,
-      nama,
-      alamat,
-      nomor,
-      passwordHash,
-    });
-    successReq(res, 200, "Success update user", req.params.id);
-  } catch (err) {
-    failedReq(res, 500, err.message);
-  }
+      let passwordHash = "";
+      if (newPassword != "" && confirmPassword != "") {
+        if (newPassword !== confirmPassword) return failedReq(res, 400, "Password not match");
+        const saltRounds = 10;
+        passwordHash = bcrypt.hashSync(newPassword, saltRounds);
+      } else {
+        passwordHash = user.data().passwordHash;
+      }
+
+      await updateDoc(doc(db, "users", req.params.id), {
+        email,
+        nama,
+        alamat,
+        nomor,
+        passwordHash,
+      });
+      successReq(res, 200, "Success update user", req.params.id);
+    } catch (err) {
+      failedReq(res, 500, err.message);
+    }
+  });
 };
