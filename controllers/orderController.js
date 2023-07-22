@@ -117,6 +117,13 @@ export const createOrder = async (req, res) => {
       }
     }
 
+    const datasUser = await getDoc(doc(db, "users", idUser));
+    if (!datasUser.data()) return failedReq(res, 400, "Data not found");
+
+    const responseUser = {
+      name: datasUser.data().name,
+    };
+
     const datas = await getDoc(doc(db, "products", idMobil));
     if (!datas.data()) return failedReq(res, 400, "Data not found");
 
@@ -136,6 +143,7 @@ export const createOrder = async (req, res) => {
       uangPembayaran: "",
       uangKembali: "",
       responseMobil,
+      responseUser,
     });
 
     successReq(res, 200, "Success order", { idUser, idMobil, tanggalOrder });
