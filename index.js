@@ -8,6 +8,7 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import authRoute from "./routes/authRoute.js";
 import orderRoute from "./routes/orderRoute.js";
+import messageRoute from "./routes/messageRoute.js";
 
 const app = express();
 const port = 3000;
@@ -29,6 +30,7 @@ app.use(userRoute);
 app.use(productRoute);
 app.use(authRoute);
 app.use(orderRoute);
+app.use(messageRoute);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
