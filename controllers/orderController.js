@@ -121,7 +121,7 @@ export const createOrder = async (req, res) => {
     if (!datasUser.data()) return failedReq(res, 400, "Data not found");
 
     const responseUser = {
-      name: datasUser.data().name,
+      name: datasUser.data().nama,
     };
 
     const datas = await getDoc(doc(db, "products", idMobil));
