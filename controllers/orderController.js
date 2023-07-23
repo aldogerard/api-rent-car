@@ -195,13 +195,11 @@ export const updateOrder = async (req, res) => {
     const order = await getDoc(doc(db, "orders", id));
     if (!order.data()) return failedReq(res, 400, "order not found");
 
-    const { status, pesan } = req.body;
-
     await updateDoc(doc(db, "orders", id), {
-      status,
-      pesan,
+      status: "selesai",
+      pesan: "Sewa telah selesai",
     });
-    successReq(res, 200, "Success update user", { id, status, pesan });
+    successReq(res, 200, "Success update order", { id, status: "selesai", pesan: "Sewa telah selesai" });
   } catch (err) {
     failedReq(res, 500, err.message);
   }
