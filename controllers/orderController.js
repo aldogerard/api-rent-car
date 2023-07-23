@@ -66,9 +66,6 @@ export const checkOrder = async (req, res) => {
     const { id } = req.params;
     const { idMobil, tanggalOrder } = req.body;
 
-    console.log(id);
-    console.log(tanggalOrder);
-
     const q = (where("idMobil", "==", id), where("status", "!=", "selesai"));
     const q2 = query(collect, where("idMobil", "==", id), where("status", "!=", "selesai"));
     const checkMobil = await getDocs(q2);
@@ -79,16 +76,20 @@ export const checkOrder = async (req, res) => {
       };
     });
 
-    console.log(response[0]);
+    if (response[0] == null) return successReq(res, 200, "No order found");
 
+    let check = false;
     if (response[0] != null) {
       for (let tanggal of tanggalOrder) {
-        if (response[0].tanggalOrder.includes(tanggal)) {
-          return failedReq(res, 400, "order already exist");
-        }
+        response.map((doc) => {
+          if (doc.tanggalOrder.includes(tanggal)) {
+            check = true;
+          }
+        });
       }
     }
 
+    if (check) return failedReq(res, 400, "order already exist");
     successReq(res, 200, "No order found");
   } catch (err) {
     failedReq(res, 500, err.message);
