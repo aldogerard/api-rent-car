@@ -119,14 +119,15 @@ export const createOrder = async (req, res) => {
     }
 
     const datasUser = await getDoc(doc(db, "users", idUser));
-    if (!datasUser.data()) return failedReq(res, 400, "Data not found");
+    if (!datasUser.data()) return failedReq(res, 400, "Users not found");
 
     const responseUser = {
       name: datasUser.data().nama,
+      email: datasUser.data().email,
     };
 
     const datas = await getDoc(doc(db, "products", idMobil));
-    if (!datas.data()) return failedReq(res, 400, "Data not found");
+    if (!datas.data()) return failedReq(res, 400, "Cars not found");
 
     const responseMobil = {
       url: datas.data().url,
