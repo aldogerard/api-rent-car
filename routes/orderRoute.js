@@ -1,11 +1,12 @@
 import express from "express";
-import { checkOrder, createOrder, deleteOrder, getOrder, getOrderById, getOrderByIdUser, paymentOrder, updateOrder } from "../controllers/orderController.js";
+import { checkOrder, createOrder, deleteOrder, getOrder, getOrderById, getOrderByIdMobil, getOrderByIdUser, paymentOrder, updateOrder } from "../controllers/orderController.js";
 
 const router = express.Router();
 
 router.get("/order", getOrder);
 router.get("/order/:id", getOrderById);
 router.get("/order/users/:id", getOrderByIdUser);
+router.get("/order/cars/:id", getOrderByIdMobil);
 
 router.post("/order/check/:id", checkOrder);
 router.post("/order", createOrder);
