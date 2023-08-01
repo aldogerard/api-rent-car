@@ -98,7 +98,7 @@ export const checkOrder = async (req, res) => {
       };
     });
 
-    if (response[0] == null) return successReq(res, 200, "No order found");
+    if (response[0] == null) return successReq(res, 200, "The car is available");
 
     let check = false;
     if (response[0] != null) {
@@ -111,7 +111,7 @@ export const checkOrder = async (req, res) => {
       }
     }
 
-    if (check) return failedReq(res, 400, "order already exist");
+    if (check) return failedReq(res, 400, "The car on that date has been rented");
     successReq(res, 200, "No order found");
   } catch (err) {
     failedReq(res, 500, err.message);
