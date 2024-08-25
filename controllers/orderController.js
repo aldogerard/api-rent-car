@@ -3,7 +3,17 @@ import path from "path";
 import bcrypt from "bcrypt";
 import fs from "fs";
 
-import { collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, where, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  where,
+  query,
+} from "firebase/firestore";
 import { db } from "../config/database.js";
 
 import { successReq, failedReq } from "../utils/response.js";
@@ -19,7 +29,8 @@ export const getOrder = async (req, res) => {
         ...doc.data(),
       };
     });
-    if (response[0] == null) return failedReq(res, 400, "Data is empty", response);
+    if (response[0] == null)
+      return failedReq(res, 400, "Data is empty", response);
     successReq(res, 200, "Success", response);
   } catch (err) {
     failedReq(res, 500, err.message);
@@ -54,7 +65,8 @@ export const getOrderByIdUser = async (req, res) => {
         ...doc.data(),
       };
     });
-    if (response[0] == null) return failedReq(res, 400, "Data is empty", response);
+    if (response[0] == null)
+      return failedReq(res, 400, "Data is empty", response);
     successReq(res, 200, "Success", response);
   } catch (err) {
     failedReq(res, 500, err.message);
@@ -65,7 +77,11 @@ export const getOrderByIdMobil = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const q2 = query(collect, where("idMobil", "==", id), where("status", "!=", "selesai"));
+    const q2 = query(
+      collect,
+      where("idMobil", "==", id),
+      where("status", "!=", "selesai")
+    );
     const datas = await getDocs(q2);
 
     const response = datas.docs.map((doc) => {
@@ -76,7 +92,8 @@ export const getOrderByIdMobil = async (req, res) => {
       };
     });
     console.log(response);
-    if (response[0] == null) return failedReq(res, 400, "Data is empty", response);
+    if (response[0] == null)
+      return failedReq(res, 400, "Data is empty", response);
     successReq(res, 200, "Success", response);
   } catch (err) {
     failedReq(res, 500, err.message);
@@ -89,7 +106,11 @@ export const checkOrder = async (req, res) => {
     const { idMobil, tanggalOrder } = req.body;
 
     const q = (where("idMobil", "==", id), where("status", "!=", "selesai"));
-    const q2 = query(collect, where("idMobil", "==", id), where("status", "!=", "selesai"));
+    const q2 = query(
+      collect,
+      where("idMobil", "==", id),
+      where("status", "!=", "selesai")
+    );
     const checkMobil = await getDocs(q2);
     const response = checkMobil.docs.map((doc) => {
       return {
@@ -98,7 +119,8 @@ export const checkOrder = async (req, res) => {
       };
     });
 
-    if (response[0] == null) return successReq(res, 200, "The car is available");
+    if (response[0] == null)
+      return successReq(res, 200, "The car is available");
 
     let check = false;
     if (response[0] != null) {
@@ -111,7 +133,8 @@ export const checkOrder = async (req, res) => {
       }
     }
 
-    if (check) return failedReq(res, 400, "The car on that date has been rented");
+    if (check)
+      return failedReq(res, 400, "The car on that date has been rented");
     successReq(res, 200, "No order found");
   } catch (err) {
     failedReq(res, 500, err.message);
@@ -122,8 +145,13 @@ export const createOrder = async (req, res) => {
   try {
     const { idUser, idMobil, tanggalOrder, hargaSewa, totalHarga } = req.body;
 
-    const q = (where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
-    const q2 = query(collect, where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
+    const q =
+      (where("idMobil", "==", idMobil), where("status", "!=", "selesai"));
+    const q2 = query(
+      collect,
+      where("idMobil", "==", idMobil),
+      where("status", "!=", "selesai")
+    );
     const checkMobil = await getDocs(q2);
     const response = checkMobil.docs.map((doc) => {
       return {
@@ -152,7 +180,7 @@ export const createOrder = async (req, res) => {
     if (!datas.data()) return failedReq(res, 400, "Cars not found");
 
     const responseMobil = {
-      url: datas.data().url,
+      url: datas.data().imageUrl,
       name: datas.data().name,
     };
 
@@ -184,7 +212,8 @@ export const paymentOrder = async (req, res) => {
     const order = await getDoc(doc(db, "orders", id));
     if (!order.data()) return failedReq(res, 400, "Data not found");
 
-    if (uangPembayaran < totalHarga) return failedReq(res, 400, "Uang pembayaran kurang");
+    if (uangPembayaran < totalHarga)
+      return failedReq(res, 400, "Uang pembayaran kurang");
 
     await updateDoc(doc(db, "orders", id), {
       uangPembayaran,
@@ -192,7 +221,10 @@ export const paymentOrder = async (req, res) => {
       status: "proses",
       uangKembali: uangPembayaran - totalHarga,
     });
-    successReq(res, 200, "Success payment", { uangPembayaran, pesan: "Pembayaran selesai" });
+    successReq(res, 200, "Success payment", {
+      uangPembayaran,
+      pesan: "Pembayaran selesai",
+    });
   } catch (err) {
     failedReq(res, 500, err.message);
   }
@@ -223,7 +255,11 @@ export const updateOrder = async (req, res) => {
       status: "selesai",
       pesan: "Sewa telah selesai",
     });
-    successReq(res, 200, "Success update order", { id, status: "selesai", pesan: "Sewa telah selesai" });
+    successReq(res, 200, "Success update order", {
+      id,
+      status: "selesai",
+      pesan: "Sewa telah selesai",
+    });
   } catch (err) {
     failedReq(res, 500, err.message);
   }
