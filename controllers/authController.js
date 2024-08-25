@@ -3,7 +3,17 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import "dotenv/config";
 
-import { collection, getDocs, where, getDoc, doc, setDoc, updateDoc, deleteDoc, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+} from "firebase/firestore";
 import { db } from "../config/database.js";
 
 import { successReq, failedReq } from "../utils/response.js";
