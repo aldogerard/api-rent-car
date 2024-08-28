@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "cors": {
-    "allowOrigins": "*",
-    "allowMethods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    "allowHeaders": ["Origin", "X-Requested-With", "Content-Type", "Accept"]
+  "edge": {
+    "cors": {
+      "origin": "*",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      "headers": ["Origin", "X-Requested-With", "Content-Type", "Accept"]
+    }
   },
   "builds": [
     {
