@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "cors": {
+    "allowOrigins": "*",
+    "allowMethods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    "allowHeaders": ["Origin", "X-Requested-With", "Content-Type", "Accept"]
+  },
   "builds": [
     {
       "src": "index.js",
