@@ -16,12 +16,13 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const corsOptions = {
-  origin: "*",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: "*",
+    allowedHeaders: "*",
+  })
+);
 app.use(express.json());
 app.use(
   fileUpload({
