@@ -10,6 +10,7 @@ import authRoute from "./routes/authRoute.js";
 import orderRoute from "./routes/orderRoute.js";
 import messageRoute from "./routes/messageRoute.js";
 
+
 const app = express();
 const port = 3000;
 
@@ -18,6 +19,13 @@ const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  fileUpload({
+    useTempFiles: true, // <--- Add this option
+
+    tempFileDir: "./uploads/", // <--- Specify a temporary directory
+  })
+);
 
 app.get("/", (req, res) => {
   res.json({ message: "RENT CAR SERVICE", __dirname });

@@ -65,11 +65,12 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  const file = req.file;
+  const file = req.files.file;
+  console.log(file);
   if (file == null) return failedReq(res, 400, "No file uploaded");
   const { name, price, brand, year, type } = req.body;
   const fileSize = file.size;
-  const ext = file.originalname.split(".")[1];
+  const ext = file.name.split(".")[1];
   const allowedType = ["png", "jpg", "jpeg"];
 
   if (!allowedType.includes(ext.toLowerCase()))
@@ -79,11 +80,10 @@ export const createProduct = async (req, res) => {
 
   let imageUrl = "";
   let imageId = "";
-
+  let path = req.files.file.tempFilePath;
   try {
     // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
-
+    const result = await cloudinary.uploader.upload(path);
     // Send the Cloudinary URL in the response
     imageUrl = result.secure_url;
     imageId = result.public_id;
@@ -99,7 +99,7 @@ export const createProduct = async (req, res) => {
       brand,
       year,
       type,
-      images: file.originalname,
+      images: file.name,
       imageId,
       imageUrl,
     });
@@ -113,8 +113,6 @@ export const deleteProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
   if (!product.data()) return failedReq(res, 400, "Product not found");
   try {
-    console.log(product.data());
-
     await cloudinary.uploader.destroy(product.data().imageId);
     const id = req.params.id;
     await deleteDoc(doc(db, "products", id));
@@ -128,11 +126,11 @@ export const updateProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
   if (!product.data()) return failedReq(res, 400, "Product not found");
 
-  const file = req.file;
+  const file = req.files.file;
   if (file == null) return failedReq(res, 400, "No file uploaded");
   const { name, price, brand, year, type } = req.body;
   const fileSize = file.size;
-  const ext = file.originalname.split(".")[1];
+  const ext = file.name.split(".")[1];
   const allowedType = ["png", "jpg", "jpeg"];
 
   if (!allowedType.includes(ext.toLowerCase()))
@@ -142,10 +140,13 @@ export const updateProduct = async (req, res) => {
 
   let imageUrl = "";
   let imageId = "";
+  let path = req.files.file.tempFilePath;
 
   try {
+    await cloudinary.uploader.destroy(product.data().imageId);
+
     // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await cloudinary.uploader.upload(path);
 
     // Send the Cloudinary URL in the response
     imageUrl = result.secure_url;
@@ -162,7 +163,7 @@ export const updateProduct = async (req, res) => {
       brand,
       year,
       type,
-      images: file.originalname,
+      images: file.name,
       imageId,
       imageUrl,
     });
