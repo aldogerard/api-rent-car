@@ -32,13 +32,6 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(
-  fileUpload({
-    useTempFiles: true, // <--- Add this option
-
-    tempFileDir: "./uploads/", // <--- Specify a temporary directory
-  })
-);
 
 app.get("/", (req, res) => {
   res.json({ message: "RENT CAR SERVICE", __dirname });
