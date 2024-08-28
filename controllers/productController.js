@@ -119,8 +119,9 @@ export const createProduct = async (req, res) => {
     console.log(file);
     console.log(body);
 
-    const result = await cloudinary.uploader.upload(file.path);
-    res.json({ url: result.secure_url, public_id: result.public_id });
+    // const result = await cloudinary.uploader.upload(file.path);
+    // res.json({ url: result.secure_url, public_id: result.public_id });
+    res.json({ file });
   } catch (err) {
     console.error(err);
 
