@@ -9,6 +9,7 @@ import productRoute from "./routes/productRoute.js";
 import authRoute from "./routes/authRoute.js";
 import orderRoute from "./routes/orderRoute.js";
 import messageRoute from "./routes/messageRoute.js";
+import upload from "./config/multer.js";
 
 const app = express();
 const port = 3000;
@@ -33,6 +34,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(upload.single("file"));
 
 app.get("/", (req, res) => {
   res.json({ message: "RENT CAR SERVICE", __dirname });
