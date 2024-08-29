@@ -66,68 +66,65 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// export const createProduct = async (req, res) => {
-// const file = req.files.file;
-// console.log(file);
-// if (file == null) return failedReq(res, 400, "No file uploaded");
-// const { name, price, brand, year, type } = req.body;
-// const fileSize = file.size;
-// const ext = file.name.split(".")[1];
-// const allowedType = ["png", "jpg", "jpeg"];
-
-// if (!allowedType.includes(ext.toLowerCase()))
-//   return failedReq(res, 400, "Invalid image type");
-// if (fileSize > 5000000)
-//   return failedReq(res, 400, "Image must be less than 5MB");
-
-// let imageUrl = "";
-// let imageId = "";
-// let path = req.files.file.tempFilePath;
-// try {
-//   // Upload image to Cloudinary
-//   const result = await cloudinary.uploader.upload(path);
-//   // Send the Cloudinary URL in the response
-//   imageUrl = result.secure_url;
-//   imageId = result.public_id;
-// } catch (error) {
-//   console.error(error);
-//   return failedReq(res, 500, "Error uploading image to Cloudinary");
-// }
-
-// try {
-//   await setDoc(doc(db, "products", v4()), {
-//     name,
-//     price,
-//     brand,
-//     year,
-//     type,
-//     images: file.name,
-//     imageId,
-//     imageUrl,
-//   });
-//   successReq(res, 200, "Succes create product");
-// } catch (err) {
-//   failedReq(res, 500, err.message);
-// }
-// };
-
 export const createProduct = async (req, res) => {
+  const file = req.file;
+  if (file == null) return failedReq(res, 400, "No file uploaded");
+  const { name, price, brand, year, type } = req.body;
+  const fileSize = file.size;
+  const ext = file.originalname.split(".")[1];
+  const allowedType = ["png", "jpg", "jpeg"];
+
+  if (!allowedType.includes(ext.toLowerCase()))
+    return failedReq(res, 400, "Invalid image type");
+  if (fileSize > 5000000)
+    return failedReq(res, 400, "Image must be less than 5MB");
+
+  let imageUrl = "";
+  let imageId = "";
+  let path = file.path;
   try {
-    const file = req.file;
-    const body = req.body;
+    const result = await cloudinary.uploader.upload(path);
+    imageUrl = result.secure_url;
+    imageId = result.public_id;
+  } catch (error) {
+    console.error(error);
+    return failedReq(res, 500, "Error uploading image to Cloudinary");
+  }
 
-    console.log(file);
-    console.log(body);
-
-    const result = await cloudinary.uploader.upload(file.path);
-    res.json({ url: result.secure_url, public_id: result.public_id });
-    res.json({ file });
+  try {
+    await setDoc(doc(db, "products", v4()), {
+      name,
+      price,
+      brand,
+      year,
+      type,
+      images: file.name,
+      imageId,
+      imageUrl,
+    });
+    successReq(res, 200, "Succes create product");
   } catch (err) {
-    console.error(err);
-
-    res.status(500).json({ error: "Failed to upload file" });
+    failedReq(res, 500, err.message);
   }
 };
+
+// export const createProduct = async (req, res) => {
+//   try {
+//     const file = req.file;
+//     const body = req.body;
+
+//     console.log(file);
+//     console.log(body);
+
+//     const result = await cloudinary.uploader.upload(file.path);
+//     res.json({ url: result.secure_url, public_id: result.public_id });
+//     res.json({ file });
+//   } catch (err) {
+//     console.error(err);
+
+//     res.status(500).json({ error: "Failed to upload file" });
+//   }
+// };
 
 export const deleteProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
