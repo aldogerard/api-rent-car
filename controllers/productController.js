@@ -1,7 +1,5 @@
 import { v4 } from "uuid";
 import path from "path";
-import bcrypt from "bcrypt";
-import fs from "fs";
 import "dotenv/config";
 import { fileURLToPath } from "url";
 
@@ -24,8 +22,6 @@ import { successReq, failedReq } from "../utils/response.js";
 const collect = collection(db, "products");
 
 import cloudinary from "cloudinary";
-import multer from "multer";
-import { ok } from "assert";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -98,7 +94,7 @@ export const createProduct = async (req, res) => {
       brand,
       year,
       type,
-      images: file.name,
+      images: file.originalname,
       imageId,
       imageUrl,
     });
@@ -107,24 +103,6 @@ export const createProduct = async (req, res) => {
     failedReq(res, 500, err.message);
   }
 };
-
-// export const createProduct = async (req, res) => {
-//   try {
-//     const file = req.file;
-//     const body = req.body;
-
-//     console.log(file);
-//     console.log(body);
-
-//     const result = await cloudinary.uploader.upload(file.path);
-//     res.json({ url: result.secure_url, public_id: result.public_id });
-//     res.json({ file });
-//   } catch (err) {
-//     console.error(err);
-
-//     res.status(500).json({ error: "Failed to upload file" });
-//   }
-// };
 
 export const deleteProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
@@ -143,11 +121,11 @@ export const updateProduct = async (req, res) => {
   const product = await getDoc(doc(db, "products", req.params.id));
   if (!product.data()) return failedReq(res, 400, "Product not found");
 
-  const file = req.files.file;
+  const file = req.file;
   if (file == null) return failedReq(res, 400, "No file uploaded");
   const { name, price, brand, year, type } = req.body;
   const fileSize = file.size;
-  const ext = file.name.split(".")[1];
+  const ext = file.originalname.split(".")[1];
   const allowedType = ["png", "jpg", "jpeg"];
 
   if (!allowedType.includes(ext.toLowerCase()))
@@ -157,7 +135,7 @@ export const updateProduct = async (req, res) => {
 
   let imageUrl = "";
   let imageId = "";
-  let path = req.files.file.tempFilePath;
+  let path = file.path;
 
   try {
     await cloudinary.uploader.destroy(product.data().imageId);
@@ -180,7 +158,7 @@ export const updateProduct = async (req, res) => {
       brand,
       year,
       type,
-      images: file.name,
+      images: file.originalname,
       imageId,
       imageUrl,
     });
